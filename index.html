@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="outerbox">
+      <div class="card0">
+        <div class="search">
+            <i
+            class="fa-solid fa-magnifying-glass"
+            style="color: rgb(255, 255, 255)"
+            ></i>
+            <input type="text" placeholder="Search City" />
+        </div>
+      </div>
+      <div class="card1">
+        <div class="location">
+          <div class="location-box"> 
+            <span class="text"> 
+              <i class="fa-solid fa-location-dot" style="color: rgb(30, 48, 80);"></i>
+              <p id="text1" style="padding-left: 7px;"> Noida</p> 
+            </span>
+            <span class="convert">
+              <button id="f">F</button>
+              <button id="c">C</button>
+            </span>
+          </div>
+        </div>
+        <div class="temperature">
+          <p id="now">Now</p>
+          <div id="weather">Weather</div>
+          <div class="curr-temp">24 °C</div>
+        </div>
+        <div class="weather-image">
+          <div class="image"></div>
+        </div>
+
+      </div>
+      <div class="card2">
+
+      </div>
+      <div class="card3"></div>
+      <div class="card4"></div>
+    </div>
+    
+    <script src="script.js"></script>
+  </body>
+</html>
