@@ -51,4 +51,7 @@ async function call() {
   temp.innerText = `${curr_temp} °C`;
 
 }
-call();
+window.addEventListener("load", ()=>{
+  call();
+
+});
