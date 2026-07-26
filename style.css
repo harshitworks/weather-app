@@ -17,7 +17,7 @@ body {
     gap: 10px;
 
     display: grid;
-    grid-template-columns: 7fr 4fr;
+    grid-template-columns: 7fr 5fr;
     grid-template-rows: 1fr 4fr 4fr 4fr 4fr;
 
 }
@@ -53,6 +53,123 @@ body {
 .card2 {
     grid-column: 1/2;
     grid-row: 4/6;
+    display:flex;
+
+    .card21 {
+        height:100%;
+        width:75%;
+        /* background-color: pink; */
+        
+        
+        .card211{
+            height:20%;
+            width:100%;
+            
+            p{
+                color: white;
+                font-size: 1.8rem;
+                padding: 0.3rem 0 0 1.9rem;
+
+            }
+
+
+            
+        }
+        .card212{
+            height:55%;
+            width:100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+
+            .card2121 , .card2122 , .card2123 , .card2124 , .card2125{
+                height:93%;
+                width: 12%;
+                background-color: #052816;
+                color:white;
+                border:none;
+                border:1px solid lightgray;
+                border-radius: 2rem;
+                
+                text-align: center;
+                font-size: 1.3rem;
+                align-content: center;
+
+                p{
+                    padding: 0.8rem 0 0.8rem 0;
+                }
+                
+
+            }
+            
+        }
+        .card213{
+            height:25%;
+            width:100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            
+            .card2131{
+                background-color:#082C1D;
+                height:85%;
+                width:90%;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                border: 1px solid lightcyan;
+                border-radius: 1.2rem;
+                color:white;
+                img{
+                    height: 80%;
+
+                }
+    
+                p{
+                    font-size: 2rem;
+                }
+
+            }
+
+        }
+    }
+    .card22 {
+        height:100%;
+        width:25%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .card221{
+            background-color: #00180D;
+            height:95%;
+            width:95%;
+            border-radius: 1rem;
+            align-content: center;
+
+
+            .sunrise , .sunset, .daylength {
+                width:100%;
+                height:32%;
+
+                p{
+                    font-size: 1.8rem;
+                    color:white;
+                    text-indent: 4px;
+                    
+                }
+                #time {
+                    word-spacing: 4.3rem;
+                    line-height: 2.3rem;
+                }
+            }
+            .daylength #time {
+                word-spacing: 0.2rem;
+
+            }
+        }
+    }
 }
 
 .card3 {
