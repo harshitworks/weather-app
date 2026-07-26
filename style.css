@@ -154,13 +154,15 @@ body {
                 height:32%;
 
                 p{
-                    font-size: 1.8rem;
+                    font-size: 1.7rem;
                     color:white;
-                    text-indent: 4px;
+                    text-indent: 0.3rem;
+                    padding: 2px;
                     
                 }
                 #time {
-                    word-spacing: 4.3rem;
+                    font-size: 1.6rem;
+                    word-spacing: 350%;
                     line-height: 2.3rem;
                 }
             }
