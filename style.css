@@ -160,13 +160,13 @@ body {
                     padding: 2px;
                     
                 }
-                #time {
+                #time1, #time2, #time3 {
                     font-size: 1.6rem;
                     word-spacing: 350%;
                     line-height: 2.3rem;
                 }
             }
-            .daylength #time {
+            .daylength #time3 {
                 word-spacing: 0.2rem;
 
             }
