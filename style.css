@@ -303,11 +303,10 @@ body {
     justify-content: center;
     align-items: center;
 
-    .image {
+    #curr-image {
         height:90%;
         width:90%;
-        /* background-color: pink; */
-        background-image: url("images/rainy.png");
+        background-image: url("images/sunny.png");
         background-position: center;
         background-repeat: no-repeat;
         background-size: contain;
