@@ -13,6 +13,7 @@ const now = new Date();
 const currentHour =`${now.getFullYear()}-${ String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}T${String(now.getHours()).padStart(2,"0")}:00`;
 const imgArr = ["rainy", "cloudy", "sunny", "warm", "lighting"];
 const img = document.querySelector("#curr-image");
+const img2 = document.querySelector("#next-image");
 let data ;
 
 let lat = 28.49615;
@@ -66,7 +67,7 @@ async function call(city) {
   setTemperature(data);
   sunTime(data);
   nextFive(data);
-  changeImage();
+  changeImage(data.current.weather_code,img);
   return value;
   
 }
@@ -113,6 +114,8 @@ function nextFive(data){
     // tomorrow 
     let avg = ((data.daily.temperature_2m_max[1] + data.daily.temperature_2m_min[1])/2).toFixed(2) ;
     e5.innerText= avg+" °C";
+    changeImage(data.daily.weather_code[1],img2);
+
 
 }
 
@@ -171,9 +174,7 @@ function toCelsius() {
     e5.innerText= avg+" °C";
 }
   
-function changeImage() {
-    const code = data.current.weather_code;
-    const temp = data.current.temperature_2m;
+function changeImage(code,tag) {
     let nextName ;
     
     if (code === 0) {
@@ -197,7 +198,7 @@ function changeImage() {
       else {
         nextName  = "cloudy";
       }
-      img.style.backgroundImage = `url("images/${nextName}.png")`;
+      tag.style.backgroundImage = `url("images/${nextName}.png")`;
 }
     
     

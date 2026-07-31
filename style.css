@@ -58,8 +58,6 @@ body {
     .card21 {
         height:100%;
         width:75%;
-        /* background-color: pink; */
-        
         
         .card211{
             height:20%;
@@ -70,10 +68,7 @@ body {
                 font-size: 1.8rem;
                 padding: 0.3rem 0 0 1.9rem;
 
-            }
-
-
-            
+            }   
         }
         .card212{
             height:55%;
@@ -97,11 +92,8 @@ body {
 
                 p{
                     padding: 0.8rem 0 0.8rem 0;
-                }
-                
-
+                }   
             }
-            
         }
         .card213{
             height:25%;
@@ -125,7 +117,6 @@ body {
                     height: 80%;
 
                 }
-    
                 p{
                     font-size: 2rem;
                 }
@@ -212,7 +203,6 @@ body {
     align-items: center;
 }
 .location {
-    /* background-color: pink ; */
     grid-column: 1/3;
     grid-row:1/2;
     display: flex;
@@ -220,7 +210,6 @@ body {
     align-items: center;
 }
 .location-box{
-    /* background-color: rgb(131, 209, 137); */
     border-radius: 1rem;
     width:98%;
     height:80%;
@@ -238,7 +227,6 @@ body {
     .convert{
         border-radius: 1rem;
         padding: 0.4rem 1rem 0.4rem 1rem;
-        /* background-color: rgb(254, 254, 254); */
         text-indent: 2%;
         display: flex;
         align-items: center;
@@ -275,7 +263,6 @@ body {
     
 }
 .temperature {
-    /* background-color:blue; */
     grid-column: 1/2;
     grid-row:2/3;
 }
@@ -296,7 +283,6 @@ body {
     font-size: 3rem;
 }
 .weather-image {
-    /* background-color: red; */
     grid-column: 2/3;
     grid-row:2/3;
     display: flex;
@@ -311,4 +297,12 @@ body {
         background-repeat: no-repeat;
         background-size: contain;
     }
+}
+#next-image{
+    height:90%;
+    width:20%;
+    background-image: url("images/sunny.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
 }
