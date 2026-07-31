@@ -97,8 +97,8 @@ function nextFive(data){
     }
     
     // tomorrow 
-    let avg = (data.daily.temperature_2m_max[1] + data.daily.temperature_2m_min[1])/2 ;
     const e5 = document.querySelector('#tomorrow-temp');
+    let avg = ((data.daily.temperature_2m_max[1] + data.daily.temperature_2m_min[1])/2).toFixed(2) ;
     e5.innerText= avg+" °C";
     
     console.log(avg);
