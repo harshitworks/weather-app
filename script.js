@@ -9,6 +9,9 @@ const e6 = document.querySelector("#search-city");
 const e7 = document.querySelector(".fa-solid.fa-magnifying-glass");
 const e8 = document.querySelector("#text1");
 const temp = document.querySelector(".curr-temp");
+const now = new Date();
+const currentHour =`${now.getFullYear()}-${ String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}T${String(now.getHours()).padStart(2,"0")}:00`;
+let data ;
 
 let lat = 28.49615;
 let lon = 77.53601;
@@ -58,7 +61,7 @@ async function call(city) {
   const baseurl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=sunset,sunrise,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,daylight_duration,wind_speed_10m_max&hourly=temperature_2m,precipitation_probability,apparent_temperature,relative_humidity_2m,precipitation,cloud_cover,visibility,wind_speed_10m&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,wind_speed_10m,rain,precipitation,cloud_cover&timezone=auto`;
 
   let response = await fetch(baseurl);
-  let data = await response.json();
+  data = await response.json();
   console.log(data);
   setTemperature(data);
   sunTime(data);
@@ -99,23 +102,10 @@ e7.addEventListener("click", async (evt) => {
 function nextFive(data){
   const times = data.hourly.time;
   const temps = data.hourly.temperature_2m;
-
-  const now = new Date();
-
-  const currentHour =
-  `${now.getFullYear()}-${
-  String(now.getMonth()+1).padStart(2,"0")
-  }-${
-  String(now.getDate()).padStart(2,"0")
-  }T${
-  String(now.getHours()).padStart(2,"0")
-  }:00`;
-
   const index = times.indexOf(currentHour);
 
 
   for(let i=index ;i< index+5;i++){
-
       const e3 = document.querySelector(`.card212${i-index+1}   #hourly-temp`);
       const e4 = document.querySelector(`.card212${i-index+1}   #time`);
       const hour24 = Number(times[i].substring(11, 13));
@@ -123,7 +113,7 @@ function nextFive(data){
       const period = hour24 >= 12 ? "PM" : "AM";
       const hour12 = hour24 % 12 || 12;
       
-      e3.innerText=temps[i];
+      e3.innerText=temps[i]+" °C";
       e4.innerText = `${hour12} ${period}`;
     }
     
@@ -159,21 +149,60 @@ function sunTime(data) {
 fbtn.addEventListener("click", () => {
   fbtn.classList.add("toggle-btn");
   cbtn.classList.remove("toggle-btn");
-  if (currentTempC !== null) {
+  if (currentTempC !== null && celsius) {
     celsius = false;
     const f = (currentTempC * 9) / 5 + 32;
     temp.innerText = `${f.toFixed(1)} °F`;
+    toFahrenheit();
   }
 });
 
 cbtn.addEventListener("click", () => {
   cbtn.classList.add("toggle-btn");
   fbtn.classList.remove("toggle-btn");
-  if (currentTempC !== null) {
+  if (currentTempC !== null && !celsius) {
     celsius = true;
     temp.innerText = `${currentTempC} °C`;
+    toCelsius();
   }
 });
+
+
+
+function toFahrenheit() {
+  for(let i=0 ;i<5;i++){
+    const e3 = document.querySelector(`.card212${i+1}   #hourly-temp`);
+    let value = parseFloat(e3.innerText);
+    const f = (value * 9) / 5 + 32;
+    e3.innerText = `${f.toFixed(1)} °F`;
+
+  }
+  
+  // tomorrow 
+  let avg =  parseFloat(e5.innerText);
+  const f2 = (avg * 9) / 5 + 32;
+  e5.innerText = `${f2.toFixed(1)} °F`;
+
+}
+
+function toCelsius() {
+  const temps = data.hourly.temperature_2m;
+  const times = data.hourly.time;
+  const index = times.indexOf(currentHour);
+
+
+  for(let i=index ;i< index+5;i++){
+      const e3 = document.querySelector(`.card212${i-index+1}   #hourly-temp`);
+      let value=temps[i]+" °C"
+      e3.innerText= value;
+    }
+    
+    // tomorrow 
+    let avg = ((data.daily.temperature_2m_max[1] + data.daily.temperature_2m_min[1])/2).toFixed(2) ;
+    e5.innerText= avg+" °C";
+
+
+}
 
 const imgArr = ["rainy", "cloudy", "sunny", "warm", "lighting"];
 const img = document.querySelector(".image");
@@ -195,6 +224,7 @@ function changeImage(el) {
 
 
 window.addEventListener("load", async () => {
+  celsius = true;
   e8.innerText= "Noida";
   await call("Noida");
 });
