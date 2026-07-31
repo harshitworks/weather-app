@@ -186,12 +186,12 @@ function changeImage(code,tag) {
     else if (code === 3) {
       nextName  = "cloudy";
     }
-    else if (
-        (code >= 51 && code <= 67) ||
-        (code >= 80 && code <= 82)
-      ) {
+    else if (code >= 51 && code <= 67) {
         nextName  = "rainy";
       }
+      else if (code >= 80 && code <= 82) {
+        nextName = "favicon";
+    }
       else if (code >= 95 && code <= 99) {
         nextName  = "lighting";
       }
