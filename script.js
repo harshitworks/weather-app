@@ -90,7 +90,7 @@ e7.addEventListener("click", async (evt) => {
   if(!value) {
     city = "Noida";
   }
-  city = city.charAt(0).toUpperCase() + city.slice(1)
+  city = city.charAt(0).toUpperCase() + city.slice(1).toLowerCase(); 
   e8.innerText= city;
   e6.value = "";
 
