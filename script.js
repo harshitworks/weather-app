@@ -99,7 +99,7 @@ async function searchCity(evt) {
       city = "Noida";
     }
     city = city.charAt(0).toUpperCase() + city.slice(1).toLowerCase(); 
-    e8.innerText= city;
+    e8.innerText= city.toLowerCase().split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
     e6.value = "";
 
 }
@@ -183,7 +183,7 @@ function changeImage(code,tag) {
     let nextName ;
     
     if (code === 0) {
-      nextName  = "sunny";
+      nextName = data.current.is_day ? "sunny": "clear";
     }
     else if (code === 1 || code === 2) {
       nextName  = "warm";
@@ -203,8 +203,14 @@ function changeImage(code,tag) {
       else {
         nextName  = "cloudy";
       }
-      e12.innerText = nextName.charAt(0).toUpperCase() + nextName.slice(1);
       tag.style.backgroundImage = `url("images/${nextName}.png")`;
+      if(nextName === "favicon") {
+        nextName = "rainy";
+      }
+      else if(nextName === "clear") {
+        nextName = "Clear Sky";
+      }
+      e12.innerText = nextName.charAt(0).toUpperCase() + nextName.slice(1);
 }
     
     
