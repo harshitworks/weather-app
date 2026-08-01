@@ -14,6 +14,8 @@ const currentHour =`${now.getFullYear()}-${ String(now.getMonth()+1).padStart(2,
 const imgArr = ["rainy", "cloudy", "sunny", "warm", "lighting"];
 const img = document.querySelector("#curr-image");
 const img2 = document.querySelector("#next-image");
+const graph = document.querySelector(".graph");
+const raintime = document.querySelector(".rain-time");
 let data ;
 
 let lat = 28.49615;
@@ -68,6 +70,7 @@ async function call(city) {
   sunTime(data);
   nextFive(data);
   changeImage(data.current.weather_code,img);
+  precipitationGraph(data);
   return value;
   
 }
@@ -235,3 +238,24 @@ function changeImage(code,tag) {
   e7.addEventListener("click", async (evt) => {
       cityFind();
     });
+
+ // Chances of Rain
+    function precipitationGraph(data) {
+        const precipitationProbabilities = data.hourly.precipitation_probability;
+        const times = data.hourly.time;
+        const bars = graph.children;
+        const index = times.indexOf(currentHour);
+
+        for(let i = index; i < index + 6 ; i++){
+
+          const hours24 = Number(times[i].substring(11, 13));
+          const period = hours24 >= 12 ? "PM" : "AM";
+          const hours12 = hours24%12 || 12 ;
+          
+          const tooltip = document.createElement("div");
+          tooltip.classList.add("tooltip");
+          tooltip.innerText = hours12 + " " + period;
+          raintime.appendChild(tooltip);
+          bars[i - index].style.height = precipitationProbabilities[i] + "%";
+        }
+  }

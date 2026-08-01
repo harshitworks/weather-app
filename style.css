@@ -165,10 +165,6 @@ body {
     }
 }
 
-.card3 {
-    grid-column: 2/3;
-    grid-row: 2/5;
-}
 
 .card4 {
     grid-column: 2/3;
@@ -306,3 +302,72 @@ body {
     background-repeat: no-repeat;
     background-size: contain;
 }
+
+.card3 {
+    grid-column: 2/3;
+    grid-row: 2/5;
+
+    display: flex;
+    flex-wrap:wrap;
+    align-items: center;
+    justify-content: space-around;
+
+
+    .card31{
+        height:10%;
+        width:100%;
+        
+        
+        p{
+            font-size: 2.2rem;
+            color:white;
+            padding: 0.4rem 0 0.4rem 1rem;
+        }
+
+        
+    }
+    .card32, .card33, .card34, .card35{
+        height:41%;
+        width: 46%;
+        background:#0f1f17;
+        border-radius:1rem;
+        
+        p{
+            font-size: 1.3rem;
+            color:white;
+            padding: 0.4rem 0 0.4rem 0.8rem;
+        }
+    }
+    .card32 {
+
+        .graph{
+            display:flex;
+            align-items:flex-end;
+            justify-content: space-evenly;
+            height:70%;
+            width:100%;
+
+        }
+        
+        .bar{
+            width:5%;
+            height: 100%;
+            background:limegreen;
+            border-top-left-radius: 0.4rem;
+            border-top-right-radius: 0.4rem;
+            
+        }
+        .rain-time{
+            height: 10%;
+            width:100%;
+            /* background-color: pink; */
+            font-size: 0.6rem;
+            color:aliceblue;
+            text-align: center;
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+    }
+}
+
