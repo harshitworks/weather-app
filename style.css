@@ -317,7 +317,6 @@ body {
         height:10%;
         width:100%;
         
-        
         p{
             font-size: 2.2rem;
             color:white;
@@ -360,7 +359,6 @@ body {
         .rain-time{
             height: 10%;
             width:100%;
-            /* background-color: pink; */
             font-size: 0.6rem;
             color:aliceblue;
             text-align: center;
@@ -368,6 +366,17 @@ body {
             justify-content: space-evenly;
         }
 
+    }
+    .card33 {  
+        .uv{
+        padding: 1rem 0 0 1.3rem;
+        } 
+        #uv-index{
+            color:white;
+            font-size: 1.5rem;
+            text-align: center;
+            margin: -4rem 0 0 -1rem;
+        }
     }
 }
 

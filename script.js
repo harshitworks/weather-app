@@ -6,6 +6,7 @@ const rise = document.getElementById("time1");
 const set = document.getElementById("time2");
 const e5 = document.querySelector('#tomorrow-temp');
 const e6 = document.querySelector("#search-city");
+const e12 = document.querySelector("#weather");
 const e7 = document.querySelector(".fa-solid.fa-magnifying-glass");
 const e8 = document.querySelector("#text1");
 const temp = document.querySelector(".curr-temp");
@@ -16,7 +17,10 @@ const img = document.querySelector("#curr-image");
 const img2 = document.querySelector("#next-image");
 const graph = document.querySelector(".graph");
 const raintime = document.querySelector(".rain-time");
+const uv_para = document.querySelector("#uv-index");
 let data ;
+let times  ;
+let index = data ? times.indexOf(currentHour) : -1;
 
 let lat = 28.49615;
 let lon = 77.53601;
@@ -61,17 +65,21 @@ async function call(city) {
     lon = ans.loni;
     let value = ans.value;
   
-  const baseurl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,sunset,sunrise,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,daylight_duration,wind_speed_10m_max&hourly=temperature_2m,precipitation_probability,apparent_temperature,relative_humidity_2m,precipitation,cloud_cover,visibility,wind_speed_10m&current=weather_code,temperature_2m,relative_humidity_2m,apparent_temperature,is_day,wind_speed_10m,rain,precipitation,cloud_cover&timezone=auto`;
+    const baseurl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,sunset,sunrise,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,daylight_duration,wind_speed_10m_max&hourly=temperature_2m,precipitation_probability,uv_index,apparent_temperature,relative_humidity_2m,precipitation,cloud_cover,visibility,wind_speed_10m&current=weather_code,temperature_2m,relative_humidity_2m,apparent_temperature,is_day,wind_speed_10m,rain,precipitation,cloud_cover&timezone=auto`;
 
-  let response = await fetch(baseurl);
-  data = await response.json();
-  console.log(data);
-  setTemperature(data);
-  sunTime(data);
-  nextFive(data);
-  changeImage(data.current.weather_code,img);
-  precipitationGraph(data);
-  return value;
+    let response = await fetch(baseurl);
+    data = await response.json();
+    times = data.hourly.time;
+    index = times.indexOf(currentHour);
+    console.log(data);
+    
+    setTemperature(data);
+    sunTime(data);
+    nextFive(data);
+    changeImage(data.current.weather_code,img);
+    precipitationGraph(data);
+    uvIndex(data);
+    return value;
   
 }
   
@@ -97,9 +105,7 @@ async function searchCity(evt) {
 }
 
 function nextFive(data){
-  const times = data.hourly.time;
   const temps = data.hourly.temperature_2m;
-  const index = times.indexOf(currentHour);
 
 
   for(let i=index ;i< index+5;i++){
@@ -162,10 +168,6 @@ function toFahrenheit() {
 
 function toCelsius() {
   const temps = data.hourly.temperature_2m;
-  const times = data.hourly.time;
-  const index = times.indexOf(currentHour);
-  
-  
   for(let i=index ;i< index+5;i++){
     const e3 = document.querySelector(`.card212${i-index+1}   #hourly-temp`);
     let value=temps[i]+" °C"
@@ -201,6 +203,7 @@ function changeImage(code,tag) {
       else {
         nextName  = "cloudy";
       }
+      e12.innerText = nextName.charAt(0).toUpperCase() + nextName.slice(1);
       tag.style.backgroundImage = `url("images/${nextName}.png")`;
 }
     
@@ -242,10 +245,9 @@ function changeImage(code,tag) {
  // Chances of Rain
     function precipitationGraph(data) {
         const precipitationProbabilities = data.hourly.precipitation_probability;
-        const times = data.hourly.time;
         const bars = graph.children;
-        const index = times.indexOf(currentHour);
-
+        
+        raintime.innerHTML = "";
         for(let i = index; i < index + 6 ; i++){
 
           const hours24 = Number(times[i].substring(11, 13));
@@ -259,3 +261,25 @@ function changeImage(code,tag) {
           bars[i - index].style.height = precipitationProbabilities[i] + "%";
         }
   }
+
+  // UV Index : 
+    function uvIndex(data) {
+      const curr_uv = data.hourly.uv_index[index];
+      const path = document.querySelector("#uv");
+      const path_length = path.getTotalLength();
+      let uv_level = "";
+      if(curr_uv <= 2) {
+        uv_level = "Low";
+      }
+      else if(curr_uv <= 6) {
+        uv_level = "Moderate";
+      }
+      else {
+        uv_level = "High";
+      }
+
+      path.style.strokeDasharray = path_length;
+      const progress = curr_uv/11 * path_length;
+      path.style.strokeDashoffset = path_length - progress;
+      uv_para.innerHTML = ` ${curr_uv.toFixed(0)}/10 <br> ${uv_level} `;
+    }
