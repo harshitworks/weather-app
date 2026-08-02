@@ -18,12 +18,19 @@ const img2 = document.querySelector("#next-image");
 const graph = document.querySelector(".graph");
 const raintime = document.querySelector(".rain-time");
 const uv_para = document.querySelector("#uv-index");
+const hm = document.querySelector("#humidity");
+const windBars = document.querySelector(".wind-bars");
+const wn = document.querySelector("#windSpeed");
+const othercity1 = document.querySelector("#othercity1");
+const othercity2 = document.querySelector("#othercity2");
+const ot1 = document.querySelector("#other1");
+const ot2 = document.querySelector("#other2");
 let data ;
 let times  ;
 let index = data ? times.indexOf(currentHour) : -1;
 
-let lat = 28.49615;
-let lon = 77.53601;
+let lat ;
+let lon ;
 let celsius = true;
 let currentTempC = null;
 
@@ -66,19 +73,24 @@ async function call(city) {
     let value = ans.value;
   
     const baseurl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,sunset,sunrise,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,daylight_duration,wind_speed_10m_max&hourly=temperature_2m,precipitation_probability,uv_index,apparent_temperature,relative_humidity_2m,precipitation,cloud_cover,visibility,wind_speed_10m&current=weather_code,temperature_2m,relative_humidity_2m,apparent_temperature,is_day,wind_speed_10m,rain,precipitation,cloud_cover&timezone=auto`;
-
+    const baseurl2 = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=us_aqi&timezone=auto`;
     let response = await fetch(baseurl);
+    let response2 = await fetch(baseurl2);
     data = await response.json();
+    data2 = await response2.json();
     times = data.hourly.time;
     index = times.indexOf(currentHour);
     console.log(data);
-    
+    console.log(data2);
+
     setTemperature(data);
     sunTime(data);
     nextFive(data);
     changeImage(data.current.weather_code,img);
     precipitationGraph(data);
     uvIndex(data);
+    humidity(data);
+    windSpeed(data);
     return value;
   
 }
@@ -89,6 +101,7 @@ async function searchCity(evt) {
     }
 }
   
+let prevtemp ;
   async function cityFind(){
     let city = e6.value;
     if(city.length<=2) {
@@ -99,6 +112,13 @@ async function searchCity(evt) {
       city = "Noida";
     }
     city = city.charAt(0).toUpperCase() + city.slice(1).toLowerCase(); 
+    let prev = e8.innerText;
+    let prev2 = othercity1.innerText;
+    let other2 = ot1.innerText;
+    othercity1.innerText=prev;
+    ot1.innerText= prevtemp;
+    othercity2.innerText=prev2;
+    ot2.innerText= other2;
     e8.innerText= city.toLowerCase().split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
     e6.value = "";
 
@@ -132,6 +152,7 @@ function setTemperature(data) {
   let curr_temp = data.current.temperature_2m;
   currentTempC = curr_temp;
   celsius = true;
+  prevtemp = temp.innerText;
   temp.innerText = `${currentTempC} °C`;
 
 }
@@ -161,8 +182,18 @@ function toFahrenheit() {
   
   // tomorrow 
   let avg =  parseFloat(e5.innerText);
-  const f2 = (avg * 9) / 5 + 32;
-  e5.innerText = `${f2.toFixed(1)} °F`;
+  const f0 = (avg * 9) / 5 + 32;
+  e5.innerText = `${f0.toFixed(1)} °F`;
+  
+  // other1:
+  let ott1 = parseFloat(ot1.innerText);
+  const f1 = (ott1 * 9) / 5 + 32;
+  ot1.innerText = `${f1.toFixed(1)} °F`;
+
+  let ott2 = parseFloat(ot2.innerText);
+  const f2 = (ott2 * 9) / 5 + 32;
+  ot2.innerText = `${f2.toFixed(1)} °F`;
+
   
 }
 
@@ -177,6 +208,15 @@ function toCelsius() {
     // tomorrow 
     let avg = ((data.daily.temperature_2m_max[1] + data.daily.temperature_2m_min[1])/2).toFixed(2) ;
     e5.innerText= avg+" °C";
+
+    let ott1 = parseFloat(ot1.innerText);
+    const f1 = (ott1-32) * 5 / 9 ;
+    ot1.innerText = `${f1.toFixed(1)} °C`;
+  
+    let ott2 = parseFloat(ot2.innerText);
+    const f2 = (ott2 -32) * 5 /9;
+    ot2.innerText = `${f2.toFixed(1)} °C`;
+
 }
   
 function changeImage(code,tag) {
@@ -288,4 +328,46 @@ function changeImage(code,tag) {
       const progress = curr_uv/11 * path_length;
       path.style.strokeDashoffset = path_length - progress;
       uv_para.innerHTML = ` ${curr_uv.toFixed(0)}/10 <br> ${uv_level} `;
+    }
+
+    // Humidity : 
+
+    function humidity(data) {
+      const humidity = data.current.relative_humidity_2m;
+      let status = "";
+      if(humidity<30) {
+        status = "Low";
+      }
+      else if(humidity>=30 && humidity<=40) {
+        status = "Good";
+      }
+      else if(humidity>=40 && humidity<=60) {
+        status = "Moderate";
+      }
+      else {
+        status = "High";
+      }
+      
+      hm.innerHTML = `${status}: ${humidity}%  `;
+      
+
+    }  
+    // wind speed :
+    function windSpeed(data) {
+      wn.innerText = "Now: "+data.current.wind_speed_10m+" Km/h";
+      const wind = data.hourly.wind_speed_10m;
+      const wbars = windBars.children;
+      let winds = [];
+      for(let i = index; i < index + 10 ; i++){
+        if(i==index) {
+          wbars[i-index].style.backgroundColor= "rgb(140, 239, 94)";
+        }
+        winds.push(wind[i]);  
+      }
+      let max = Math.max(...winds); 
+      for(let i = 0 ; i < 10 ; i ++) {
+        let w = winds[i]/max*100;
+        wbars[i].style.height= w +"%";
+      }
+
     }

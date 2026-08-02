@@ -18,7 +18,7 @@ body {
 
     display: grid;
     grid-template-columns: 7fr 5fr;
-    grid-template-rows: 1fr 4fr 4fr 4fr 4fr;
+    grid-template-rows: 1fr 4fr 4fr 4fr 6fr;
 
 }
 
@@ -29,7 +29,7 @@ body {
 .card4 {
 
     background-color: #082C1D;
-    border: 1px solid white;
+    border: 1px solid rgb(126, 125, 125);
     border-radius: 0.5rem;
 
 }
@@ -152,7 +152,7 @@ body {
                     
                 }
                 #time1, #time2, #time3 {
-                    font-size: 1.6rem;
+                    font-size: 1.5rem;
                     word-spacing: 300%;
                     line-height: 2.3rem;
                 }
@@ -334,7 +334,7 @@ body {
         p{
             font-size: 1.3rem;
             color:white;
-            padding: 0.4rem 0 0.4rem 0.8rem;
+            padding: 0.4rem 0 0 0.8rem;
         }
     }
     .card32 {
@@ -378,5 +378,75 @@ body {
             margin: -4rem 0 0 -1rem;
         }
     }
-}
+    .card35 {
+        #humidity-image{
+            height: 70%;
+            width: 100%;
+            background-image: url("images/humidity.png");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+        #humidity{
+            color:white;
+            font-size: 1rem;
+            margin: -1rem 0 0 0.3rem;
+        }   
+    }
+    .card34{
 
+        .wind-bars{
+            height: 68%;
+            width: 100%;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            gap:0.6rem;
+
+            .wind{
+                height:95%;
+                width:4%;
+                background-color:rgb(81, 255, 0);
+                border:1px solid black;
+                border-radius:0.4rem;
+            }
+        }
+         #windSpeed{
+            font-size:1rem;
+         }
+    }
+}
+.card4 {
+    
+    #card41{
+        font-size:2rem;
+        color:white;
+        padding: 0.2rem 0 0 1rem;
+        
+    }
+    .card411{
+        display:flex;
+        justify-content:space-evenly;
+        height:75%;
+        width:100%;
+
+        .card42 , .card43{
+            height:100%;
+            width:45%;
+            background-color:#0F1F17;
+            border-radius:0.6rem;
+            
+        }
+        p{
+            color:white;
+            text-align:center;
+            font-size:1rem;
+            
+        }
+        #other1 , #other2{
+            color:white;
+            padding:2rem 0 0.5rem 0;
+            font-size:2.5rem;
+        }
+    }
+}
