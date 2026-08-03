@@ -80,8 +80,7 @@ async function call(city) {
     data2 = await response2.json();
     times = data.hourly.time;
     index = times.indexOf(currentHour);
-    console.log(data);
-    console.log(data2);
+    
 
     setTemperature(data);
     sunTime(data);
