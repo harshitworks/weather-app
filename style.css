@@ -1,25 +1,32 @@
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
 body {
+    min-height: 100vh;
     display: flex;
     justify-content: center;
-    background-color: rgb(0, 0, 0);
+    background-color: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    padding: 1rem;
+    overflow-x: hidden;
 }
 
-
 .outerbox {
-    height: 95vh;
-    width: 95vw;
-    margin-top: 2rem;
-    gap: 10px;
-
+    width: min(1400px, 100%);
+    margin: 0 auto;
     display: grid;
-    grid-template-columns: 7fr 5fr;
-    grid-template-rows: 1fr 4fr 4fr 4fr 6fr;
-
+    gap: 1rem;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.95fr);
+    grid-template-areas:
+        "header header"
+        "main side"
+        "forecast side"
+        "highlights highlights"
+        "cities cities";
 }
 
 .card0,
@@ -27,466 +34,600 @@ body {
 .card2,
 .card3,
 .card4 {
-
     background-color: #082C1D;
-    border: 1px solid rgb(126, 125, 125);
-    border-radius: 0.5rem;
-
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 1rem;
+    overflow: hidden;
 }
 
 .card0 {
-    grid-column: 1/3;
-    grid-row: 1/2;
-    background-color: black;
-    border:none;
+    grid-area: header;
+    background-color: #000;
+    border: none;
+    min-height: 45px;
 }
 
 .card1 {
-    grid-column: 1/2;
-    grid-row: 2/4;
-
+    grid-area: main;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 3fr 7fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1rem;
+    padding: 1rem;
 }
 
 .card2 {
-    grid-column: 1/2;
-    grid-row: 4/6;
-    display:flex;
-
-    .card21 {
-        height:100%;
-        width:75%;
-        
-        .card211{
-            height:20%;
-            width:100%;
-            
-            p{
-                color: white;
-                font-size: 1.8rem;
-                padding: 0.3rem 0 0 1.9rem;
-
-            }   
-        }
-        .card212{
-            height:55%;
-            width:100%;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-
-            .card2121 , .card2122 , .card2123 , .card2124 , .card2125{
-                height:93%;
-                width: 12%;
-                background-color: #052816;
-                color:white;
-                border:none;
-                border:1px solid lightgray;
-                border-radius: 2rem;
-                
-                text-align: center;
-                font-size: 1.3rem;
-                align-content: center;
-
-                p{
-                    padding: 0.8rem 0 0.8rem 0;
-                }   
-            }
-        }
-        .card213{
-            height:25%;
-            width:100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            
-            
-            .card2131{
-                background-color:#082C1D;
-                height:85%;
-                width:90%;
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-                border: 1px solid lightcyan;
-                border-radius: 1.2rem;
-                color:white;
-                img{
-                    height: 80%;
-
-                }
-                p{
-                    font-size: 2rem;
-                }
-
-            }
-
-        }
-    }
-    .card22 {
-        height:100%;
-        width:25%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        .card221{
-            background-color: #00180D;
-            height:95%;
-            width:95%;
-            border-radius: 1rem;
-            align-content: center;
-
-
-            .sunrise , .sunset, .daylength {
-                width:100%;
-                height:32%;
-
-                p{
-                    font-size: 1.7rem;
-                    color:white;
-                    text-indent: 0.3rem;
-                    padding: 2px;
-                    
-                }
-                #time1, #time2, #time3 {
-                    font-size: 1.5rem;
-                    word-spacing: 300%;
-                    line-height: 2.3rem;
-                }
-            }
-            .daylength #time3 {
-                word-spacing: 0.2rem;
-
-            }
-        }
-    }
+    grid-area: forecast;
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+    gap: 1rem;
+    padding: 1rem;
 }
 
+.card3 {
+    grid-area: highlights;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+}
 
 .card4 {
-    grid-column: 2/3;
-    grid-row: 5/6;
-}
-
-.card0 input {
-    text-indent: 2%;
-    height:100%;
-    color:white;
-    background: transparent;
-    border: none;
-    outline: none;    
-}
-
-.card0 input::placeholder {
-    color: white;
-}
-
-.card0 i {
-    padding-left:1rem;
-    padding-right:0.5rem;
+    grid-area: cities;
+    padding: 1rem;
 }
 
 .search {
+    width: min(360px, 100%);
     height: 100%;
-    width: 15%;
     display: flex;
+    align-items: center;
     border: none;
     background-color: #082C1D;
-    border-radius: 1rem;
-    align-items: center;
+    border-radius: 999px;
+    padding: 0 1rem;
 }
+
+.card0 input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    color: white;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    text-indent: 0.5rem;
+}
+
+.card0 input::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.card0 i {
+    padding-right: 0.75rem;
+    flex-shrink: 0;
+}
+
 .location {
-    grid-column: 1/3;
-    grid-row:1/2;
+    grid-column: 1 / -1;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: flex-start;
 }
-.location-box{
-    border-radius: 1rem;
-    width:98%;
-    height:80%;
+
+.location-box {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .text{
-        border-radius: 1rem;
-        padding: 0.4rem 1rem 0.4rem 1rem;
-        background-color: rgb(254, 254, 254);
-        text-indent: 2%;
-        display: flex;
-        align-items: center;
-    }
-    .convert{
-        border-radius: 1rem;
-        padding: 0.4rem 1rem 0.4rem 1rem;
-        text-indent: 2%;
-        display: flex;
-        align-items: center;
-        button {
-            border:none;
-            border-radius: 1rem;
-            padding:0.5rem 1rem 0.5rem 1rem ;
-            z-index: 1;
-        
-        }
-    }
-  
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.text,
+.convert {
+    border-radius: 999px;
+    padding: 0.6rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #fff;
+    color: #081a13;
+}
+
+.text p {
+    color: #1e3050;
+    font-weight: 600;
+    padding-left: 0.4rem;
+}
+
+.convert {
+    background: transparent;
+    padding: 0;
+    gap: 0.35rem;
+}
+
+.convert button {
+    border: none;
+    border-radius: 999px;
+    padding: 0.55rem 0.95rem;
+    cursor: pointer;
+    font-weight: 600;
 }
 
 #c {
-    border:1px solid rgb(0, 0, 0);
     background-color: yellowgreen;
-    position: relative;
-    right: 0.4rem;
-}
-#f {
-    background-color: #8ceae4;
-    border:1px solid black;
-    position: relative;
-    left:0.4rem;
+    color: #052816;
+    position:relative;
+    
 }
 
-#f.toggle-btn {
-    z-index: 2;
-    
+#f {
+    background-color: #8ceae4;
+    color: #052816;
 }
+
+#f.toggle-btn,
 #c.toggle-btn {
-    z-index: 2;
-    
+    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
 }
+
 .temperature {
-    grid-column: 1/2;
-    grid-row:2/3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 1rem 0.5rem;
 }
+
 #now {
     color: white;
-    font-size: 3rem;
-    padding: 2rem 0 0 3rem;
-    font-family: "Lucida Handwriting";
-} 
-#weather {
-    font-family: "Lucida Handwriting";
-    color: white;
-    padding: 0 0 0 3rem;
+    font-size: clamp(1.8rem, 3vw, 3rem);
+    font-family: "Lucida Handwriting", cursive;
 }
+
+#weather {
+    font-family: "Lucida Handwriting", cursive;
+    color: white;
+    font-size: clamp(1rem, 2vw, 1.25rem);
+}
+
 .curr-temp {
     color: white;
-    padding:1rem 0 0 3rem;
-    font-size: 3rem;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 600;
 }
+
 .weather-image {
-    grid-column: 2/3;
-    grid-row:2/3;
     display: flex;
     justify-content: center;
     align-items: center;
-
-    #curr-image {
-        height:90%;
-        width:90%;
-        background-image: url("images/sunny.png");
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: contain;
-    }
+    min-height: 220px;
 }
-#next-image{
-    height:90%;
-    width:20%;
+
+#curr-image {
+    width: min(100%, 320px);
+    aspect-ratio: 1 / 1;
     background-image: url("images/sunny.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
 }
 
-.card3 {
-    grid-column: 2/3;
-    grid-row: 2/5;
-
+.card21 {
     display: flex;
-    flex-wrap:wrap;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.card211 {
+    padding: 0.3rem 0 0 0.25rem;
+}
+
+.card211 p {
+    color: white;
+    font-size: clamp(1.2rem, 2vw, 1.7rem);
+}
+
+.card212 {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.7rem;
+}
+
+.card2121,
+.card2122,
+.card2123,
+.card2124,
+.card2125 {
+    min-height: 140px;
+    background-color: #052816;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 1rem;
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    justify-content: space-around;
-
-
-    .card31{
-        height:10%;
-        width:100%;
-        
-        p{
-            font-size: 2.2rem;
-            color:white;
-            padding: 0.4rem 0 0.4rem 1rem;
-        }
-
-        
-    }
-    .card32, .card33, .card34, .card35{
-        height:41%;
-        width: 46%;
-        background:#0f1f17;
-        border-radius:1rem;
-        
-        p{
-            font-size: 1.3rem;
-            color:white;
-            padding: 0.4rem 0 0 0.8rem;
-        }
-    }
-    .card32 {
-
-        .graph{
-            display:flex;
-            align-items:flex-end;
-            justify-content: space-evenly;
-            height:70%;
-            width:100%;
-
-        }
-        
-        .bar{
-            width:5%;
-            height: 100%;
-            background:limegreen;
-            border-top-left-radius: 0.4rem;
-            border-top-right-radius: 0.4rem;
-            
-        }
-        .rain-time{
-            height: 10%;
-            width:100%;
-            font-size: 0.6rem;
-            color:aliceblue;
-            text-align: center;
-            display: flex;
-            justify-content: space-evenly;
-        }
-
-    }
-    .card33 {  
-        .uv{
-        padding: 1rem 0 0 1.3rem;
-        } 
-        #uv-index{
-            color:white;
-            font-size: 1.5rem;
-            text-align: center;
-            margin: -4rem 0 0 -1rem;
-        }
-    }
-    .card35 {
-        #humidity-image{
-            height: 70%;
-            width: 100%;
-            background-image: url("images/humidity.png");
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: contain;
-        }
-        #humidity{
-            color:white;
-            font-size: 1rem;
-            margin: -1rem 0 0 0.3rem;
-        }   
-    }
-    .card34{
-
-        .wind-bars{
-            height: 68%;
-            width: 100%;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            gap:0.6rem;
-
-            .wind{
-                height:95%;
-                width:4%;
-                background-color:rgb(81, 255, 0);
-                border:1px solid black;
-                border-radius:0.4rem;
-            }
-        }
-         #windSpeed{
-            font-size:1rem;
-         }
-    }
+    gap: 0.45rem;
+    text-align: center;
 }
-.card4 {
-    
-    #card41{
-        font-size:2rem;
-        color:white;
-        padding: 0.2rem 0 0 1rem;
-        
-    }
-    .card411{
-        display:flex;
-        justify-content:space-evenly;
-        height:75%;
-        width:100%;
 
-        .card42 , .card43{
-            height:100%;
-            width:45%;
-            background-color:#0F1F17;
-            border-radius:0.6rem;
-            
-        }
-        p{
-            color:white;
-            text-align:center;
-            font-size:1rem;
-            
-        }
-        #other1 , #other2{
-            color:white;
-            padding:2rem 0 0.5rem 0;
-            font-size:2.5rem;
-        }
-    }
+.card2121 img,
+.card2122 img,
+.card2123 img,
+.card2124 img,
+.card2125 img {
+    width: clamp(22px, 3vw, 34px);
+    height: auto;
 }
+
+.card2121 p,
+.card2122 p,
+.card2123 p,
+.card2124 p,
+.card2125 p {
+    font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+}
+
+.card213 {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.card2131 {
+    width: 100%;
+    background-color: #082C1D;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 1rem;
+    color: white;
+    flex-wrap: wrap;
+}
+
+#tomorrow,
+#tomorrow-temp {
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+}
+
+#next-image {
+    height: 62px;
+    width: 62px;
+    background-image: url("images/sunny.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.card22 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card221 {
+    width: 100%;
+    min-height: 100%;
+    background-color: #00180D;
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.sunrise,
+.sunset,
+.daylength {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    border-radius: 0.8rem;
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.sunrise p,
+.sunset p,
+.daylength p {
+    font-size: clamp(1rem, 1.3vw, 1.2rem);
+    color: white;
+}
+
+#time1,
+#time2,
+#time3 {
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    color: #dffcf0;
+    margin-top: 0.35rem;
+}
+
+.card31 {
+    grid-column: 1 / -1;
+    padding: 0.2rem 0 0.5rem;
+}
+
+.card31 p {
+    font-size: clamp(1.3rem, 2vw, 2rem);
+    color: white;
+}
+
+.card32,
+.card33,
+.card34,
+.card35 {
+    min-height: 220px;
+    background: #0f1f17;
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.card32 p,
+.card33 p,
+.card34 p,
+.card35 p {
+    font-size: clamp(1rem, 1.3vw, 1.2rem);
+    color: white;
+    margin-bottom: 0.75rem;
+}
+
+.graph {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-evenly;
+    gap: 0.4rem;
+    flex: 1;
+}
+
+.bar {
+    width: 100%;
+    max-width: 20px;
+    min-height: 10px;
+    background: limegreen;
+    border-top-left-radius: 0.4rem;
+    border-top-right-radius: 0.4rem;
+}
+
+.rain-time {
+    width: 100%;
+    font-size: 0.75rem;
+    color: aliceblue;
+    display: flex;
+    justify-content: space-evenly;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+}
+
+.rain-time .tooltip {
+    flex: 1;
+    text-align: center;
+    word-break: break-word;
+}
+
+.card33 {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.uv {
+    width: 100%;
+    max-width: 220px;
+    height: 140px;
+    display: block;
+    margin: 0 auto;
+}
+
+#uv-index {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -10%);
+    color: white;
+    font-size: clamp(1.05rem, 1.6vw, 1.4rem);
+    text-align: center;
+    line-height: 1.3;
+    pointer-events: none;
+}
+
+#humidity-image {
+    flex: 1;
+    width: 100%;
+    background-image: url("images/humidity.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#humidity {
+    color: white;
+    font-size: clamp(1rem, 1.3vw, 1.1rem);
+    margin-top: 0.5rem;
+}
+
+.wind-bars {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 0.45rem;
+}
+
 .wind {
-    width: 12px;
-    border-radius: 10px;
+    width: clamp(6px, 1.8vw, 10px);
+    min-height: 20px;
+    border-radius: 999px;
     background: #67ff00;
-    animation: flow 5s linear infinite  ;
+    animation: flow 5s linear infinite;
 }
-.wind:nth-child(1) { height: 150px; animation-delay: 0s; }
-.wind:nth-child(2) { height: 120px; animation-delay: .1s; }
-.wind:nth-child(3) { height: 110px; animation-delay: .2s; }
-.wind:nth-child(4) { height: 130px; animation-delay: .3s; }
-.wind:nth-child(5) { height: 110px; animation-delay: .4s; }
-.wind:nth-child(6) { height: 130px; animation-delay: .5s; }
-.wind:nth-child(7) { height: 100px; animation-delay: .6s; }
-.wind:nth-child(8) { height: 70px;  animation-delay: .7s; }
-.wind:nth-child(9) { height: 80px;  animation-delay: .8s; }
-.wind:nth-child(10){ height: 130px; animation-delay: .9s; }
+
+#windSpeed {
+    font-size: clamp(1rem, 1.2vw, 1.1rem);
+    margin-top: 0.75rem;
+}
+
+#card41 {
+    font-size: clamp(1.25rem, 2vw, 1.8rem);
+    color: white;
+    padding-bottom: 0.75rem;
+}
+
+.card411 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.card42,
+.card43 {
+    background-color: #0F1F17;
+    border-radius: 0.8rem;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card42 p,
+.card43 p {
+    color: white;
+    text-align: center;
+    font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+}
+
+#other1,
+#other2 {
+    font-size: clamp(1.4rem, 2vw, 2.2rem);
+    padding: 0;
+}
 
 @keyframes flow {
+    0% {
+        transform: translate(-8px, -4px);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+    75% {
+        transform: translate(6px, -2px);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(8px, 0px);
+        opacity: 0.8;
+    }
+}
 
-        0% {
-            transform: translate(-15px, -4px);
-            opacity: .7;
-        }
-    
-        50% {
-            transform: translate(0, 0);
-            opacity: 1;
-        }
-    
-        75% {
-            transform: translate(8px, -4px);
-            opacity: .8;
-        }
-        100% {
-            transform: translate(15px, 0px);
-            opacity: .8;
-        }
-    
+@media (min-width: 1101px) {
+    .card1,
+    .card2 {
+        grid-column: 1 / -1;
+    }
+}
 
+@media (max-width: 1100px) {
+    .outerbox {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "header"
+            "main"
+            "forecast"
+            "highlights"
+            "cities";
+    }
+
+    .card1,
+    .card2 {
+        grid-column: auto;
+    }
+
+    .card2 {
+        grid-template-columns: 1fr;
+    }
+
+    .card22 {
+        min-height: 220px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 0.75rem;
+    }
+
+    .card1 {
+        grid-template-columns: 1fr;
+    }
+
+    .card3 {
+        grid-template-columns: 1fr;
+    }
+
+    .card411 {
+        grid-template-columns: 1fr;
+    }
+
+    .location-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .convert {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .search {
+        width: 100%;
+        border-radius: 999px;
+    }
+
+    .card212 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card2131 {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .card212 {
+        grid-template-columns: 1fr;
+    }
+
+    .card0 {
+        min-height: 60px;
+    }
+
+    .card0 input {
+        font-size: 0.95rem;
+    }
+
+    .weather-image {
+        min-height: 180px;
+    }
+
+    .card32,
+    .card33,
+    .card34,
+    .card35 {
+        min-height: 200px;
+    }
 }
