@@ -55,8 +55,8 @@ async function coordinates(city) {
           }
           
           return {
-            lati: lat,
-            loni : lon,
+            lat: lat,
+            lon : lon,
             value : check
           }
 
@@ -68,30 +68,28 @@ async function coordinates(city) {
 
 async function call(city) {
   const ans = await coordinates(city);
-    lat = ans.lati;
-    lon = ans.loni;
-    let value = ans.value;
+  await Api(ans);
+  return ans.value;; 
   
-    const baseurl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,sunset,sunrise,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,daylight_duration,wind_speed_10m_max&hourly=temperature_2m,precipitation_probability,uv_index,apparent_temperature,relative_humidity_2m,precipitation,cloud_cover,visibility,wind_speed_10m&current=weather_code,temperature_2m,relative_humidity_2m,apparent_temperature,is_day,wind_speed_10m,rain,precipitation,cloud_cover&timezone=auto`;
-    const baseurl2 = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=us_aqi&timezone=auto`;
-    let response = await fetch(baseurl);
-    let response2 = await fetch(baseurl2);
-    data = await response.json();
-    data2 = await response2.json();
-    times = data.hourly.time;
-    index = times.indexOf(currentHour);
-    
+}
 
-    setTemperature(data);
-    sunTime(data);
-    nextFive(data);
-    changeImage(data.current.weather_code,img);
-    precipitationGraph(data);
-    uvIndex(data);
-    humidity(data);
-    windSpeed(data);
-    return value;
+async function Api(coordinate){
+
+  const baseurl = `https://api.open-meteo.com/v1/forecast?latitude=${coordinate.lat}&longitude=${coordinate.lon}&daily=weather_code,sunset,sunrise,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,daylight_duration,wind_speed_10m_max&hourly=temperature_2m,precipitation_probability,uv_index,apparent_temperature,relative_humidity_2m,precipitation,cloud_cover,visibility,wind_speed_10m&current=weather_code,temperature_2m,relative_humidity_2m,apparent_temperature,is_day,wind_speed_10m,rain,precipitation,cloud_cover&timezone=auto`;
+  let response = await fetch(baseurl);
+  data = await response.json();
+  times = data.hourly.time;
+  index = times.indexOf(currentHour);
   
+  setTemperature(data);
+  sunTime(data);
+  nextFive(data);
+  changeImage(data.current.weather_code,img);
+  precipitationGraph(data);
+  uvIndex(data);
+  humidity(data);
+  windSpeed(data);
+
 }
   
 async function searchCity(evt) {
@@ -253,11 +251,17 @@ function changeImage(code,tag) {
 }
     
     
-    window.addEventListener("load", async () => {
-      celsius = true;
-      e8.innerText= "Noida";
-      await call("Noida");
-    });
+window.addEventListener("load", async () => {
+  celsius = true;
+  try {
+      const ans = await getLocation();
+      const city = await getPlaceName(ans.lat, ans.lon);
+      e8.innerText=city;
+      await Api(ans);
+  } catch (err) {
+      console.error("Failed to load weather:", err);
+  }
+});
     
     fbtn.addEventListener("click", () => {
       fbtn.classList.add("toggle-btn");
@@ -370,3 +374,54 @@ function changeImage(code,tag) {
       }
 
     }
+
+    // location :
+    function getLocation() {
+      return new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(
+              (position) => {
+                  resolve({
+                      lat: position.coords.latitude,
+                      lon: position.coords.longitude,
+                      value: true
+                  });
+              },
+              (error) => {
+                  console.error("Location error:", error);
+  
+                  resolve({
+                      lat: 28.49615,
+                      lon: 77.53601,
+                      value: false
+                  });
+              }
+          );
+      });
+  }
+  async function getPlaceName(lat, lon) {
+    const url =
+        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+
+    try {
+        const response = await fetch(url, {
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        return data.address.city ||
+               data.address.town ||
+               data.address.village ||
+               data.address.county ||
+               "Unknown Location";
+
+    } catch (error) {
+        console.error("Reverse geocoding error:", error);
+        return "Unknown Location";
+    }
+}
