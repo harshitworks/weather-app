@@ -84,7 +84,7 @@ async function Api(coordinate){
   setTemperature(data);
   sunTime(data);
   nextFive(data);
-  changeImage(data.current.weather_code,img);
+  changeImage(data.current.weather_code,img,true);
   precipitationGraph(data);
   uvIndex(data);
   humidity(data);
@@ -140,7 +140,7 @@ function nextFive(data){
     // tomorrow 
     let avg = ((data.daily.temperature_2m_max[1] + data.daily.temperature_2m_min[1])/2).toFixed(2) ;
     e5.innerText= avg+" °C";
-    changeImage(data.daily.weather_code[1],img2);
+    changeImage(data.daily.weather_code[1],img2,false);
 
 
 }
@@ -216,7 +216,7 @@ function toCelsius() {
 
 }
   
-function changeImage(code,tag) {
+function changeImage(code,tag,change) {
     let nextName ;
     
     if (code === 0) {
@@ -247,30 +247,20 @@ function changeImage(code,tag) {
       else if(nextName === "clear") {
         nextName = "Clear Sky";
       }
-      e12.innerText = nextName.charAt(0).toUpperCase() + nextName.slice(1);
+
+      if(change) e12.innerText = nextName.charAt(0).toUpperCase() + nextName.slice(1);
 }
     
     
-window.addEventListener("load", async () => {
-  celsius = true;
-  try {
-      const ans = await getLocation();
-      const city = await getPlaceName(ans.lat, ans.lon);
-      e8.innerText=city;
-      await Api(ans);
-  } catch (err) {
-      console.error("Failed to load weather:", err);
-  }
-});
-    
-    fbtn.addEventListener("click", () => {
-      fbtn.classList.add("toggle-btn");
-      cbtn.classList.remove("toggle-btn");
-      if (currentTempC !== null && celsius) {
-        celsius = false;
-        const f = (currentTempC * 9) / 5 + 32;
-        temp.innerText = `${f.toFixed(1)} °F`;
-        toFahrenheit();
+
+fbtn.addEventListener("click", () => {
+  fbtn.classList.add("toggle-btn");
+  cbtn.classList.remove("toggle-btn");
+  if (currentTempC !== null && celsius) {
+    celsius = false;
+    const f = (currentTempC * 9) / 5 + 32;
+    temp.innerText = `${f.toFixed(1)} °F`;
+    toFahrenheit();
       }
     });
     
@@ -283,145 +273,158 @@ window.addEventListener("load", async () => {
         toCelsius();
       }
     });
-
     
-  // Dynamic City
-  e6.addEventListener("keydown", (evt)=>{searchCity(evt);})
+    
+    // Dynamic City
+    e6.addEventListener("keydown", (evt)=>{searchCity(evt);})
   e7.addEventListener("click", async (evt) => {
-      cityFind();
-    });
-
- // Chances of Rain
-    function precipitationGraph(data) {
-        const precipitationProbabilities = data.hourly.precipitation_probability;
-        const bars = graph.children;
-        
-        raintime.innerHTML = "";
-        for(let i = index; i < index + 6 ; i++){
-
-          const hours24 = Number(times[i].substring(11, 13));
-          const period = hours24 >= 12 ? "PM" : "AM";
-          const hours12 = hours24%12 || 12 ;
-          
-          const tooltip = document.createElement("div");
-          tooltip.classList.add("tooltip");
-          tooltip.innerText = hours12 + " " + period;
-          raintime.appendChild(tooltip);
-          bars[i - index].style.height = precipitationProbabilities[i] + "%";
-        }
+    cityFind();
+  });
+  
+  // Chances of Rain
+  function precipitationGraph(data) {
+    const precipitationProbabilities = data.hourly.precipitation_probability;
+    const bars = graph.children;
+    
+    raintime.innerHTML = "";
+    for(let i = index; i < index + 6 ; i++){
+      
+      const hours24 = Number(times[i].substring(11, 13));
+      const period = hours24 >= 12 ? "PM" : "AM";
+      const hours12 = hours24%12 || 12 ;
+      
+      const tooltip = document.createElement("div");
+      tooltip.classList.add("tooltip");
+      tooltip.innerText = hours12 + " " + period;
+      raintime.appendChild(tooltip);
+      bars[i - index].style.height = precipitationProbabilities[i] + "%";
+    }
   }
-
+  
   // UV Index : 
-    function uvIndex(data) {
-      const curr_uv = data.hourly.uv_index[index];
-      const path = document.querySelector("#uv");
-      const path_length = path.getTotalLength();
-      let uv_level = "";
-      if(curr_uv <= 2) {
-        uv_level = "Low";
-      }
-      else if(curr_uv <= 6) {
-        uv_level = "Moderate";
-      }
-      else {
-        uv_level = "High";
-      }
-
-      path.style.strokeDasharray = path_length;
-      const progress = curr_uv/11 * path_length;
-      path.style.strokeDashoffset = path_length - progress;
-      uv_para.innerHTML = ` ${curr_uv.toFixed(0)}/10 <br> ${uv_level} `;
+  function uvIndex(data) {
+    const curr_uv = data.hourly.uv_index[index];
+    const path = document.querySelector("#uv");
+    const path_length = path.getTotalLength();
+    let uv_level = "";
+    if(curr_uv <= 2) {
+      uv_level = "Low";
     }
-
-    // Humidity : 
-
-    function humidity(data) {
-      const humidity = data.current.relative_humidity_2m;
-      let status = "";
-      if(humidity<30) {
-        status = "Low";
-      }
-      else if(humidity>=30 && humidity<=40) {
-        status = "Good";
-      }
-      else if(humidity>=40 && humidity<=60) {
-        status = "Moderate";
-      }
-      else {
-        status = "High";
-      }
-      
-      hm.innerHTML = `${status}: ${humidity}%  `;
-      
-
-    }  
-    // wind speed :
-    function windSpeed(data) {
-      wn.innerText = "Now: "+data.current.wind_speed_10m+" Km/h";
-      const wind = data.hourly.wind_speed_10m;
-      const wbars = windBars.children;
-      let winds = [];
-      for(let i = index; i < index + 10 ; i++){
-        if(i==index) {
-          wbars[i-index].style.backgroundColor= "rgb(140, 239, 94)";
-        }
-        winds.push(wind[i]);  
-      }
-      let max = Math.max(...winds); 
-      for(let i = 0 ; i < 10 ; i ++) {
-        let w = winds[i]/max*100;
-        wbars[i].style.height= w +"%";
-      }
-
+    else if(curr_uv <= 6) {
+      uv_level = "Moderate";
     }
-
-    // location :
+    else {
+      uv_level = "High";
+    }
+    
+    path.style.strokeDasharray = path_length;
+    const progress = curr_uv/11 * path_length;
+    path.style.strokeDashoffset = path_length - progress;
+    uv_para.innerHTML = ` ${curr_uv.toFixed(0)}/10 <br> ${uv_level} `;
+  }
+  
+  // Humidity : 
+  
+  function humidity(data) {
+    const humidity = data.current.relative_humidity_2m;
+    let status = "";
+    if(humidity<30) {
+      status = "Low";
+    }
+    else if(humidity>=30 && humidity<=40) {
+      status = "Good";
+    }
+    else if(humidity>=40 && humidity<=60) {
+      status = "Moderate";
+    }
+    else {
+      status = "High";
+    }
+    
+    hm.innerHTML = `${status}: ${humidity}%  `;
+    
+    
+  }  
+  // wind speed :
+  function windSpeed(data) {
+    wn.innerText = "Now: "+data.current.wind_speed_10m+" Km/h";
+    const wind = data.hourly.wind_speed_10m;
+    const wbars = windBars.children;
+    let winds = [];
+    for(let i = index; i < index + 10 ; i++){
+      if(i==index) {
+        wbars[i-index].style.backgroundColor= "rgb(140, 239, 94)";
+      }
+      winds.push(wind[i]);  
+    }
+    let max = Math.max(...winds); 
+    for(let i = 0 ; i < 10 ; i ++) {
+      let w = winds[i]/max*100;
+      wbars[i].style.height= w +"%";
+    }
+    
+  }
+  
+  // location :
     function getLocation() {
       return new Promise((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(
-              (position) => {
-                  resolve({
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            resolve({
                       lat: position.coords.latitude,
                       lon: position.coords.longitude,
                       value: true
-                  });
-              },
-              (error) => {
-                  console.error("Location error:", error);
-  
-                  resolve({
+                    });
+                  },
+                  (error) => {
+                    console.error("Location error:", error);
+                    
+                    resolve({
                       lat: 28.49615,
                       lon: 77.53601,
                       value: false
-                  });
-              }
-          );
-      });
-  }
-  async function getPlaceName(lat, lon) {
-    const url =
-        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
-
-    try {
-        const response = await fetch(url, {
-            headers: {
-                "Accept": "application/json"
+                    });
+                  }
+                );
+              });
             }
-        });
-if (!response.ok) {
-            throw new Error(`HTTP Error: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        return data.address.city ||
-               data.address.town ||
-               data.address.village ||
-               data.address.county ||
-               "Unknown Location";
-
-    } catch (error) {
-        console.error("Reverse geocoding error:", error);
-        return "Unknown Location";
-    }
+            async function getPlaceName(lat, lon) {
+              const url =
+              `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+              
+              try {
+                const response = await fetch(url, {
+                  headers: {
+                    "Accept": "application/json"
+                  }
+                });
+                if (!response.ok) {
+                  throw new Error(`HTTP Error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                return data.address.city ||
+                data.address.town ||
+                data.address.village ||
+                data.address.county ||
+                "Unknown Location";
+                
+              } catch (error) {
+                console.error("Reverse geocoding error:", error);
+                return "Unknown Location";
+              }
 }
+// Window Reload --> 
+  
+  window.addEventListener("load", async () => {
+    celsius = true;
+    try {
+        const ans = await getLocation();
+        const city = await getPlaceName(ans.lat, ans.lon);
+        e8.innerText=city;
+        await Api(ans);
+    } catch (err) {
+        console.error("Failed to load weather:", err);
+    }
+  });
