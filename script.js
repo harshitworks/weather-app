@@ -275,7 +275,8 @@ fbtn.addEventListener("click", () => {
     });
     
     
-    // Dynamic City
+    // Dynamic City>
+     
     e6.addEventListener("keydown", (evt)=>{searchCity(evt);})
   e7.addEventListener("click", async (evt) => {
     cityFind();
