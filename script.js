@@ -33,6 +33,94 @@ let lat ;
 let lon ;
 let celsius = true;
 let currentTempC = null;
+let nearbyCityWeather = [];
+
+
+const cityCatalogue = [
+  { name: "New Delhi", lat: 28.6139, lon: 77.2090 },
+  { name: "Noida", lat: 28.5355, lon: 77.3910 },
+  { name: "Greater Noida", lat: 28.4744, lon: 77.5040 },
+  { name: "Ghaziabad", lat: 28.6692, lon: 77.4538 },
+  { name: "Gurugram", lat: 28.4595, lon: 77.0266 },
+  { name: "Faridabad", lat: 28.4089, lon: 77.3178 },
+  { name: "Meerut", lat: 28.9845, lon: 77.7064 },
+  { name: "Hapur", lat: 28.7306, lon: 77.7759 },
+  { name: "Bulandshahr", lat: 28.4069, lon: 77.8498 },
+  { name: "Bijnor", lat: 29.3724, lon: 78.1358 },
+  { name: "Agra", lat: 27.1767, lon: 78.0081 },
+  { name: "Jaipur", lat: 26.9124, lon: 75.7873 },
+  { name: "Lucknow", lat: 26.8467, lon: 80.9462 },
+  { name: "Chandigarh", lat: 30.7333, lon: 76.7794 },
+  { name: "Dehradun", lat: 30.3165, lon: 78.0322 },
+  { name: "Kanpur", lat: 26.4499, lon: 80.3319 },
+  { name: "Varanasi", lat: 25.3176, lon: 82.9739 },
+  { name: "Mumbai", lat: 19.0760, lon: 72.8777 },
+  { name: "Pune", lat: 18.5204, lon: 73.8567 },
+  { name: "Ahmedabad", lat: 23.0225, lon: 72.5714 },
+  { name: "Bengaluru", lat: 12.9716, lon: 77.5946 },
+  { name: "Chennai", lat: 13.0827, lon: 80.2707 },
+  { name: "Hyderabad", lat: 17.3850, lon: 78.4867 },
+  { name: "Kolkata", lat: 22.5726, lon: 88.3639 },
+  { name: "Kochi", lat: 9.9312, lon: 76.2673 },
+  { name: "Bhopal", lat: 23.2599, lon: 77.4126 },
+  { name: "Patna", lat: 25.5941, lon: 85.1376 },
+  { name: "London", lat: 51.5072, lon: -0.1276 },
+  { name: "Paris", lat: 48.8566, lon: 2.3522 },
+  { name: "New York", lat: 40.7128, lon: -74.0060 },
+  { name: "Los Angeles", lat: 34.0522, lon: -118.2437 },
+  { name: "Dubai", lat: 25.2048, lon: 55.2708 },
+  { name: "Singapore", lat: 1.3521, lon: 103.8198 },
+  { name: "Sydney", lat: -33.8688, lon: 151.2093 }
+];
+
+function distanceInKm(lat1, lon1, lat2, lon2) {
+  const toRadians = (value) => value * Math.PI / 180;
+  const dLat = toRadians(lat2 - lat1);
+  const dLon = toRadians(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRadians(lat1)) *
+    Math.cos(toRadians(lat2)) * Math.sin(dLon / 2) ** 2;
+  return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function renderNearbyCities() {
+  const cards = [
+    { city: othercity1, temperature: ot1 },
+    { city: othercity2, temperature: ot2 }
+  ];
+
+  cards.forEach((card, index) => {
+    const nearby = nearbyCityWeather[index];
+    if (!nearby) return;
+    card.city.innerText = nearby.name;
+    const value = celsius ? nearby.temperatureC : (nearby.temperatureC * 9) / 5 + 32;
+    card.temperature.innerText = `${value.toFixed(1)} °${celsius ? "C" : "F"}`;
+  });
+}
+
+async function loadNearbyCities(userLocation) {
+  const closestCities = cityCatalogue
+    .map((city) => ({ ...city, distance: distanceInKm(userLocation.lat, userLocation.lon, city.lat, city.lon) }))
+    .filter((city) => city.distance > 3)
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, 2);
+
+  othercity1.innerText = "Loading…";
+  othercity2.innerText = "Loading…";
+
+  try {
+    nearbyCityWeather = await Promise.all(closestCities.map(async (city) => {
+      const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m`);
+      if (!response.ok) throw new Error(`Unable to load weather for ${city.name}`);
+      const weather = await response.json();
+      return { name: city.name, temperatureC: weather.current.temperature_2m };
+    }));
+    renderNearbyCities();
+  } catch (error) {
+    console.error("Failed to load nearby cities:", error);
+    othercity1.innerText = "Unavailable";
+    othercity2.innerText = "Unavailable";
+  }
+}
 
 async function coordinates(city) {
   const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1&language=en&format=json`;
@@ -109,13 +197,6 @@ let prevtemp ;
       city = "Noida";
     }
     city = city.charAt(0).toUpperCase() + city.slice(1).toLowerCase(); 
-    let prev = e8.innerText;
-    let prev2 = othercity1.innerText;
-    let other2 = ot1.innerText;
-    othercity1.innerText=prev;
-    ot1.innerText= prevtemp;
-    othercity2.innerText=prev2;
-    ot2.innerText= other2;
     e8.innerText= city.toLowerCase().split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
     e6.value = "";
 
@@ -182,16 +263,7 @@ function toFahrenheit() {
   const f0 = (avg * 9) / 5 + 32;
   e5.innerText = `${f0.toFixed(1)} °F`;
   
-  // other1:
-  let ott1 = parseFloat(ot1.innerText);
-  const f1 = (ott1 * 9) / 5 + 32;
-  ot1.innerText = `${f1.toFixed(1)} °F`;
-
-  let ott2 = parseFloat(ot2.innerText);
-  const f2 = (ott2 * 9) / 5 + 32;
-  ot2.innerText = `${f2.toFixed(1)} °F`;
-
-  
+  renderNearbyCities();
 }
 
 function toCelsius() {
@@ -206,14 +278,7 @@ function toCelsius() {
     let avg = ((data.daily.temperature_2m_max[1] + data.daily.temperature_2m_min[1])/2).toFixed(2) ;
     e5.innerText= avg+" °C";
 
-    let ott1 = parseFloat(ot1.innerText);
-    const f1 = (ott1-32) * 5 / 9 ;
-    ot1.innerText = `${f1.toFixed(1)} °C`;
-  
-    let ott2 = parseFloat(ot2.innerText);
-    const f2 = (ott2 -32) * 5 /9;
-    ot2.innerText = `${f2.toFixed(1)} °C`;
-
+    renderNearbyCities();
 }
 
 
@@ -476,6 +541,7 @@ fbtn.addEventListener("click", () => {
         const city = await getPlaceName(ans.lat, ans.lon);
         e8.innerText=city;
         await Api(ans);
+        await loadNearbyCities(ans);
     } catch (err) {
         console.error("Failed to load weather:", err);
     }
