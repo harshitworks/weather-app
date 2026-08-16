@@ -215,40 +215,91 @@ function toCelsius() {
     ot2.innerText = `${f2.toFixed(1)} °C`;
 
 }
-  
-function changeImage(code,tag,change) {
-    let nextName ;
-    
-    if (code === 0) {
-      nextName = data.current.is_day ? "sunny": "clear";
-    }
-    else if (code === 1 || code === 2) {
-      nextName  = "warm";
-    }
-    else if (code === 3) {
-      nextName  = "cloudy";
-    }
-    else if (code >= 51 && code <= 67) {
-        nextName  = "rainy";
-      }
-      else if (code >= 80 && code <= 82) {
-        nextName = "favicon";
-    }
-      else if (code >= 95 && code <= 99) {
-        nextName  = "lighting";
-      }
-      else {
-        nextName  = "cloudy";
-      }
-      tag.style.backgroundImage = `url("images/${nextName}.png")`;
-      if(nextName === "favicon") {
-        nextName = "rainy";
-      }
-      else if(nextName === "clear") {
-        nextName = "Clear Sky";
-      }
 
-      if(change) e12.innerText = nextName.charAt(0).toUpperCase() + nextName.slice(1);
+
+function changeImage(code, tag, change) {
+  let nextName;
+  let weatherName;
+
+
+  if (code === 0) {
+      if (data.current.is_day) {
+          nextName = "sunny";
+          weatherName = "Clear Sky";
+      } else {
+          nextName = "clear";
+          weatherName = "Clear Sky";
+      }
+  }
+  else if (code===1) {
+      if (data.current.is_day) {
+        nextName = "warm";
+      } else {
+        nextName = "clear";
+      }
+      weatherName = "Clear Sky";
+  }
+  else if (code===2) {
+      if (data.current.is_day) {
+        nextName = "warm";
+        weatherName = "Clear Sky";
+    } else {
+        nextName = "clear";
+        weatherName = "Partly Cloudy";
+      }
+  }
+  else if (code === 3) {
+      nextName = "cloudy";
+      weatherName = "Overcast";
+  }
+  else if (code === 45 || code === 48) {
+      nextName = "mist";
+      weatherName = "Fog";
+  }
+  else if (code >= 51 && code <= 55) {
+      nextName = "humidity";
+      weatherName = "Drizzle";
+  }
+  else if (code === 56 || code === 57) {
+      nextName = "frost";
+      weatherName = "Freezing Drizzle";
+  }
+  else if (code >= 61 && code <= 65) {
+      nextName = "rainy";
+      weatherName = "Rain";
+  }
+  else if (code === 66 || code === 67) {
+      nextName = "frost";
+      weatherName = "Freezing Rain";
+  }
+  else if (code >= 71 && code <= 77) {
+      nextName = "snow";
+      weatherName = "Snow";
+  }
+  else if (code >= 80 && code <= 82) {
+      nextName = "rainy";
+      weatherName = "Rain Showers";
+  }
+
+  else if (code === 85 || code === 86) {
+      nextName = "snow";
+      weatherName = "Snow Showers";
+  }
+  else if (code >= 95 && code <= 99) {
+      nextName = "thunderstorm";
+      weatherName = "Thunderstorm";
+  }
+  else {
+      nextName = "cloudy";
+      weatherName = "Cloudy";
+  }
+
+  tag.style.backgroundImage = `url("images/${nextName}.png")`;
+
+  // Change weather text
+  if (change) {
+      e12.innerText = weatherName;
+  }
 }
     
     
